@@ -1,14 +1,143 @@
 
 .container {
-    width: 100%;
+    width: 100vw;
     height: 100vh;
+
+    display: flex;
+}
+
+.loginBackground {
+    width: 40vw;
+    height: 100%;
+    background-color: var(--purple1);
+
+    display: flex;
+    align-items: center;
+
+    & > div {
+        margin-left: 5.25rem;
+    }
+
+    div h2 {
+        color: var(--white);
+
+        font-weight: 700;
+        font-size: 2.25rem;
+        line-height: 2.63rem;
+    }
+
+    div span {
+        color: var(--gray1);
+
+        display: inline-block;
+        margin-top: 1rem;
+
+        font-weight: 400;
+        font-size: 1.5rem;
+        line-height: 2rem;
+    }
+}
+
+.login {
+    width: 60vw;
+    height: 100%;
+
+    background-color: var(--gray1);
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    h1 {
-        font-size: 70px;
-        color: var(--purple-800);
+    & > div {
+        width: 20rem;
+        height: 23.1875rem;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    input, button {
+        width: 100%;
+        height: 3.125rem;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border: 0;
+        border-radius: 0.5rem;
+
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    button[name=google-login] {
+        background-color: var(--red1);
+        color: var(--white);
+    }
+
+    button svg {
+        margin-right: 0.5rem;
+    }
+
+    div form {
+        width: 100%;
+        height: 50%;
+        
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    form span {
+        color: var(--gray2);
+        font-weight: 400;
+        font-size: 0.875rem;
+    }
+
+    form span div {
+        width: 4.75rem;
+        height: 0;
+        border-top: 1px solid var(--gray2);
+
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    form input {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+
+        padding: 0.8125rem 0.75rem 0.8125rem 1rem;
+
+        border: 1px solid var(--gray2);
+
+        &::placeholder {
+            font-weight: 400;
+            font-size: 1rem;
+            color: var(--gray2);
+        }
+    }
+
+    form button[type=submit] {
+        background-color: var(--purple1);
+        color: var(--white);
+
+        &:hover {
+            background-color: var(--purple2);
+        }
+    }
+}
+
+@media (max-width: 1000px) {
+    .loginBackground {
+        display: none;
+    }
+
+    .login {
+        width: 100%;
+        overflow-y: scroll;
     }
 }
