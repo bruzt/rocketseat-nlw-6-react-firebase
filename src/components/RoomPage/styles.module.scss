@@ -1,0 +1,51 @@
+
+.container {
+    width: 100%;
+    height: calc(100vh - var(--header-height));
+    
+    background-color: var(--gray1);
+
+    display: flex;
+    justify-content: center;
+
+    main {
+        width: 50rem;
+
+        margin-top: 5rem;
+    }
+
+    main > h2 {
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+    main > div {
+        width: 100%;
+        height: 50vh;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        text-align: center;
+    }
+
+    main > div > h3 {
+        margin-bottom: 0.5rem;
+
+        font-weight: 600;
+        font-size: 1.125rem;
+    }
+
+    main > div > span {
+        font-weight: 400;
+        font-size: 0.875rem;
+
+        color: var(--gray3);
+    }
+}
+
+.imageContainer {
+    margin-bottom: 1rem;
+}

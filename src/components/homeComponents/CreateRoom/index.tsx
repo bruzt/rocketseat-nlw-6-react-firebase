@@ -1,14 +1,19 @@
 import Image from 'next/image';
 import { FormEvent } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 import styles from './styles.module.scss';
 
 export default function CreateRoom() {
 
+    const router = useRouter();
+
     function onsubmit(event: FormEvent<HTMLFormElement>){
 
         event.preventDefault();
+
+        router.push('/room');
     }
 
     return (

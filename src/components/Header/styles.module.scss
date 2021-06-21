@@ -1,0 +1,63 @@
+
+.container {
+    width: 100%;
+    height: var(--header-height);
+
+    background-color: var(--gray1);
+    border-bottom: 1px solid var(--gray4);
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    & > div {
+        display: flex;
+    }
+
+    button + button {
+        margin-left: 0.5625rem;
+    }
+
+    button {
+        height: 2.5rem;
+
+        background-color: transparent;
+
+        border: 1px solid var(--purple1);
+        border-radius: 0.5rem;
+    }
+
+    button[name=room] {
+        width: 9.9375rem;
+        position: relative;
+
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        padding-right: 1rem;
+
+    }
+
+    button[name=room] div {
+        width: 2.75rem;
+        height: 2.5rem;
+
+        position: absolute;
+        left: 0;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background-color: var(--purple1);
+
+        border-radius: 0.5rem 0 0 0.5rem;
+    }
+
+    button[name=close] {
+        width: 8.1875rem;
+
+        color: var(--purple1);
+    }
+}
