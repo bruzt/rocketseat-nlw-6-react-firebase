@@ -15,11 +15,6 @@
 
         margin-top: 5rem;
     }
-
-    main > h2 {
-        font-weight: 700;
-        font-size: 1.5rem;
-    }
 }
 
 .noQuestions {
@@ -59,5 +54,31 @@
     grid-column: 1fr;
     grid-row-gap: 0.5rem;
     
-    margin-top: 1.5rem;
+    padding: 1.5rem 0;
+}
+
+.roomTitle {
+
+    display: flex;
+    align-items: center;
+
+    h2 {
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+    span {
+        display: inline-block;
+        
+        margin-left: 1rem;
+
+        padding: 0.5rem 1rem;
+
+        background-color: var(--purple3);
+        border-radius: 3.1875rem;
+
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: var(--white);
+    }
 }

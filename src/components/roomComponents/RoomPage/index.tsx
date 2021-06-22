@@ -38,7 +38,13 @@ export default function RoomPage(){
             <div className={styles.container}>
                 <main>
 
-                    <h2>Sala React Q&A</h2>
+                    <div className={styles.roomTitle}>
+                        <h2>Sala React Q&A</h2>
+                        {questionsState.length > 0 && <span>{questionsState.length > 1 
+                            ? questionsState.length + ' Perguntas' 
+                            : questionsState.length + ' Pergunta'}</span>
+                        }
+                    </div>
 
                     {questionsState.length == 0 ? (
                         <div className={styles.noQuestions}>
