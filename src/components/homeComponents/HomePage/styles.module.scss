@@ -7,7 +7,7 @@
 }
 
 .loginBackground {
-    width: 40vw;
+    flex: 4;
     height: 100%;
     background-color: var(--purple1);
 
@@ -39,7 +39,7 @@
 }
 
 .login {
-    width: 60vw;
+    flex: 6;
     height: 100%;
 
     background-color: var(--gray1);

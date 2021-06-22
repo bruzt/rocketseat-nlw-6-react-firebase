@@ -15,7 +15,7 @@ export default function roomPage(){
 
                     <h2>Sala React Q&A</h2>
 
-                    <div>
+                    <div className={styles.noQuestions}>
 
                         <div className={styles.imageContainer}>
                             <Image

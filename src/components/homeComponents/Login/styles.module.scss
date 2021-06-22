@@ -26,6 +26,12 @@
     button[name=google-login] {
         background-color: var(--red1);
         color: var(--white);
+
+        transition: filter 0.2s;
+
+        &:hover {
+            filter: brightness(0.9);
+        }
     }
     
     button svg {
@@ -74,6 +80,8 @@
     form button[type=submit] {
         background-color: var(--purple1);
         color: var(--white);
+
+        transition: background-color 0.2s;
     
         &:hover {
             background-color: var(--purple2);

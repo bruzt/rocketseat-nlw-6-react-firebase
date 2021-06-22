@@ -8,6 +8,8 @@
     display: flex;
     justify-content: center;
 
+    padding: 0 1rem;
+
     main {
         width: 50rem;
 
@@ -18,27 +20,27 @@
         font-weight: 700;
         font-size: 1.5rem;
     }
+}
 
-    main > div {
-        width: 100%;
-        height: 50vh;
+.noQuestions {
+    width: 100%;
+    height: 50vh;
 
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-        text-align: center;
-    }
+    text-align: center;
 
-    main > div > h3 {
+    h3 {
         margin-bottom: 0.5rem;
 
         font-weight: 600;
         font-size: 1.125rem;
     }
 
-    main > div > span {
+    span {
         font-weight: 400;
         font-size: 0.875rem;
 

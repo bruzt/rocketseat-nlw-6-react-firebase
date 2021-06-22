@@ -22,9 +22,9 @@ export default function HomePage() {
                         height={403}
                     />
 
-                    <h2>Toda pergunta tem<br/>uma resposta.</h2>
+                    <h2>Crie salas de Q&A ao-vivo.</h2>
 
-                    <span>Aprenda e compartilhe conhecimento<br/>com outras pessoas</span>
+                    <span>Tire dúvidas da sua audiência em tempo real</span>
                 </div>
             </div>
 
