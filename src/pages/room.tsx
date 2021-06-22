@@ -1,5 +1,5 @@
 
-import RoomPage from '../components/RoomPage';
+import RoomPage from '../components/roomComponents/RoomPage';
 
 export default function room(){
 

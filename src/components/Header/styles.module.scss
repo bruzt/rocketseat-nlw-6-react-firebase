@@ -14,10 +14,6 @@
         display: flex;
     }
 
-    button + button {
-        margin-left: 0.5625rem;
-    }
-
     button {
         height: 2.5rem;
 
@@ -58,5 +54,7 @@
         width: 8.1875rem;
 
         color: var(--purple1);
+
+        margin-left: 0.5625rem;
     }
 }

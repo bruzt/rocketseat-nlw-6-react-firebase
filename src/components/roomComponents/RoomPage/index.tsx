@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 
 import styles from './styles.module.scss';
 
-import { useAuth } from '../../contexts/authContext';
-import Header from '../Header';
+import { useAuth } from '../../../contexts/authContext';
+import Header from '../../Header';
 
 export default function RoomPage(){
 
