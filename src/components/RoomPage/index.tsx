@@ -1,10 +1,17 @@
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 import styles from './styles.module.scss';
 
+import { useAuth } from '../../contexts/authContext';
 import Header from '../Header';
 
-export default function roomPage(){
+export default function RoomPage(){
+
+    const router = useRouter();
+    const authContext = useAuth();
+
+    if(!authContext.userState) router.replace('/');
 
     return (
         <>

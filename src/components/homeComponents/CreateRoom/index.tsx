@@ -5,9 +5,14 @@ import Link from 'next/link';
 
 import styles from './styles.module.scss';
 
+import { useAuth } from '../../../contexts/authContext';
+
 export default function CreateRoom() {
 
     const router = useRouter();
+    const authContext = useAuth();
+
+    if(!authContext.userState) router.replace('/');
 
     function onsubmit(event: FormEvent<HTMLFormElement>){
 
@@ -40,7 +45,7 @@ export default function CreateRoom() {
 
                 <span>
                     Quer entrar em uma sala já existente?
-                    {' '}<a><Link href='/'>Clique aqui</Link></a>
+                    {' '}<Link href='/'>Clique aqui</Link>
                 </span>
             </form>
         </div>
