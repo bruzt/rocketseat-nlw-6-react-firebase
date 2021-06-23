@@ -44,6 +44,8 @@ export default function RoomPage(){
     const authContext = useAuth();
     const router = useRouter();
 
+    const isAuthor = authContext.userState?.id == roomAuthorId;
+
     useEffect(() => {
         fetchQuestions();
     }, [router.query.roomId]);
@@ -124,7 +126,7 @@ export default function RoomPage(){
                         }
                     </div>
                     
-                    {authContext.userState?.id != roomAuthorId && (
+                    {isAuthor == false && (
 
                         <form onSubmit={handleSendQuestion}>
                             <textarea 
@@ -180,8 +182,15 @@ export default function RoomPage(){
                         </div>
                     ) : (
                         <div className={styles.questionsContainer}>
-                            {questionsState.map( (question) => <QuestionCard key={question.id} question={question} />)}
-
+                            {questionsState.map( (question) => {
+                                return (
+                                    <QuestionCard 
+                                        key={question.id} 
+                                        question={question} 
+                                        isAuthor={isAuthor}
+                                    />
+                                );
+                            })}
                         </div>
                     )}
                 </main>

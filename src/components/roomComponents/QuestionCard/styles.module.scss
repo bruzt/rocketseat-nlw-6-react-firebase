@@ -27,11 +27,19 @@
         background-color: transparent;
     }
 
-    footer button:nth-child(2) {
-        transform: translateY(0.2rem);
+    footer button:nth-child(2),
+    footer button[name=like-button] {
+        transform: translateY(0.3rem);
     }
 
     footer button + button {
         margin-left: 1rem;
+    }
+
+    footer span {
+        margin-right: 1rem;
+
+        font: 400 1rem 'Poppins';
+        color: var(--gray3)
     }
 }
