@@ -21,15 +21,6 @@
         justify-content: space-between;
     }
 
-
-    footer div {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-
-        color: var(--gray3);
-    }
-
     footer button {
         font-size: 0;
         border: 0;
@@ -42,15 +33,5 @@
 
     footer button + button {
         margin-left: 1rem;
-    }
-}
-
-.avatarImageContainer {
-
-    margin-right: 0.5rem;
-
-    img {
-
-        border-radius: 50%;
     }
 }

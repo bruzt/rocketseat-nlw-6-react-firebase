@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { FiCopy } from 'react-icons/fi';
 
 import styles from './styles.module.scss';
@@ -8,6 +9,8 @@ import CloseRoomModal from '../roomComponents/CloseRoomModal';
 export default function Header(){
 
     const [isCloseModalOpenState, setIsCloseModalOpenState] = useState(false);
+
+    const router = useRouter();
 
     return (
         <>
@@ -25,12 +28,13 @@ export default function Header(){
                     <button 
                         type='button' 
                         name='room'
-                        onClick={() => navigator.clipboard.writeText('#00000')}
+                        title='Copiar'
+                        onClick={() => navigator.clipboard.writeText(`${router.query.roomId}`)}
                     >
                         <div>
                             <FiCopy size={20} color='#fff' />
                         </div>
-                        Sala #00000
+                        Sala {router.query.roomId}
                     </button>
 
                     <button 

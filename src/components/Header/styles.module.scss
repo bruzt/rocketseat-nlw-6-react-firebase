@@ -24,22 +24,29 @@
     }
 
     button[name=room] {
-        width: 9.9375rem;
+        min-width: 9.9375rem;
+        width: fit-content;
+
         position: relative;
 
         display: flex;
         justify-content: flex-start;
         align-items: center;
 
-        padding-left: 3.3rem;
+        padding: 0 1rem 0 3.3rem;
+
+        overflow: hidden;
     }
 
     button[name=room] div {
-        width: 2.75rem;
-        height: 2.5rem;
+        padding: 0 0.75rem;
+        //width: 2.75rem;
+        //height: 2.5rem;
 
         position: absolute;
         left: 0;
+        top: 0;
+        bottom: 0;
 
         display: flex;
         justify-content: center;
@@ -47,7 +54,7 @@
 
         background-color: var(--purple1);
 
-        border-radius: 0.5rem 0 0 0.5rem;
+        //border-radius: 0.5rem 0 0 0.5rem;
     }
 
     button[name=close] {

@@ -5,6 +5,7 @@ import { AiOutlineGoogle } from 'react-icons/ai'
 import { FiLogIn } from 'react-icons/fi';
 
 import { useAuth } from '../../../contexts/authContext';
+import { database } from '../../../services/firebase';
 
 import styles from './styles.module.scss';
 
@@ -28,9 +29,22 @@ export default function Login() {
         }
     }
 
-    function onSubmitHandler(event: FormEvent<HTMLFormElement>) {
+    async function handleJoinRoom(event: FormEvent<HTMLFormElement>) {
 
         event.preventDefault();
+
+        const room = roomState.trim();
+
+        if(room.length == 0) return;
+
+        const roomRef = await database.ref(`rooms/${room}`).get();
+
+        if(roomRef.exists() == false) {
+            alert('Sala não existe');
+            return;
+        }
+
+        router.push(`/room/${room}`);
     }
 
     return (
@@ -53,7 +67,7 @@ export default function Login() {
                 Crie sua sala com o Google
             </button>
 
-            <form onSubmit={onSubmitHandler} >
+            <form onSubmit={handleJoinRoom} >
 
                 <span><div />&nbsp;&nbsp;&nbsp;ou entre em uma sala&nbsp;&nbsp;&nbsp;<div /></span>
 

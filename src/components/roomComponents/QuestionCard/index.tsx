@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import Image from 'next/image';
 import { BiCheckCircle } from 'react-icons/bi';
 import { GoComment } from 'react-icons/go';
 import { FiTrash } from 'react-icons/fi';
 
 import styles from './styles.module.scss';
-import { IQuestion } from '../RoomPage';
+import { IQuestionState } from '../RoomPage';
 import DeleteQuestionModal from '../DeleteQuestionModal';
+import AvatarAndUserName from '../AvatarAndUserName';
 
 interface IProps {
-    question: IQuestion;
+    question: IQuestionState;
 }
 
 export default function QuestionCard({ question }: IProps){
@@ -32,23 +32,13 @@ export default function QuestionCard({ question }: IProps){
         <>
             {isDeleteQuestionModalOpenState && <DeleteQuestionModal setIsDeleteModalOpen={setIsDeleteQuestionModalOpen} />}
             
-
             <div className={styles.questionCard}>
                 <p>
-                    {question.message}
+                    {question.content}
                 </p>
                 <footer>
-                    <div>
-                        <div className={styles.avatarImageContainer}>
-                            <Image
-                                src={question.avatar}
-                                alt='avatar'
-                                width={32}
-                                height={32}
-                            />
-                        </div>
-                        {question.name}
-                    </div>
+                    
+                    <AvatarAndUserName avatar={question.author.avatar} name={question.author.name} />
 
                     <div>
                         <button 

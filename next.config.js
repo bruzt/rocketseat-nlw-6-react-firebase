@@ -12,7 +12,8 @@ module.exports = {
   images: {
     domains: [
       'storage.googleapis.com',
-      'avatars.githubusercontent.com'
+      'avatars.githubusercontent.com',
+      'lh3.googleusercontent.com',
     ]
   },
 }

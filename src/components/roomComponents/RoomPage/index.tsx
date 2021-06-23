@@ -1,35 +1,109 @@
-import { useState } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import styles from './styles.module.scss';
-
 import { useAuth } from '../../../contexts/authContext';
+
 import Header from '../../Header';
 import QuestionCard from '../QuestionCard';
+import AvatarAndUserName from '../AvatarAndUserName';
+import { database } from '../../../services/firebase';
 
-export interface IQuestion {
-    id: string;
-    name: string;
-    avatar: string;
-    message: string;
+interface IQuestion {
+    [key: string]: {
+        author: {
+            name: string;
+            avatar: string;
+        };
+        content: string;
+        isAnswered: boolean;
+        isHighLighted: boolean;
+    }
 }
 
-const questionTest = {
-    id: 'afasfasf',
-    name: 'José Amarel',
-    avatar: 'https://avatars.githubusercontent.com/u/12144828?v=4',
-    message: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illum, nobis ipsam nemo praesentium, architecto quia vitae voluptates minus officiis saepe deleniti, eius voluptatem vel aspernatur dolor quas! Corrupti, atque dolorem.',
+export interface IQuestionState {
+    id: string;
+    author: {
+        name: string;
+        avatar: string;
+    };
+    content: string;
+    isAnswered: boolean;
+    isHighLighted: boolean;
+    
 }
 
 export default function RoomPage(){
 
-    const [questionsState, setQuestions] = useState<IQuestion[]>([questionTest, questionTest])
+    const [newQuestionState, setNewQuestion] = useState('');
+    const [questionsState, setQuestions] = useState<IQuestionState[]>([]);
 
-    const router = useRouter();
     const authContext = useAuth();
+    const router = useRouter();
 
-    if(!authContext.userState) router.replace('/');
+    useEffect(() => {
+        fetchQuestions();
+    }, [router.query.roomId]);
+
+    async function fetchQuestions(){
+        try {
+
+            const roomRef = database.ref(`rooms/${router.query.roomId}`);
+
+            roomRef.once('value', (room) => {
+
+                const firebaseRoom = room.val();
+                const firebaseQuestions: IQuestion = firebaseRoom?.questions ?? {};
+
+                const parsedQuestions = Object.entries(firebaseQuestions).map( ([key, values]) => {
+                    return {
+                        id: key,
+                        ...values
+                    }
+                });
+
+                setQuestions(parsedQuestions);
+            });
+
+        } catch (error) {
+            alert('Erro ao buscar perguntas')
+        }
+    }
+
+    function loginWithGoogle(){
+
+        authContext.signInWithGoogle();
+    }
+
+    async function handleSendQuestion(event: FormEvent<HTMLFormElement>){
+
+        event.preventDefault();
+
+        if(newQuestionState.trim().length == 0) return;
+
+        if(authContext.userState == null) return;
+
+        const question = {
+            content: newQuestionState,
+            author: {
+                name: authContext.userState.name,
+                avatar: authContext.userState.avatar,
+            },
+            isHighLighted: false,
+            isAnswered: false,
+        }
+
+        try {
+
+            await database.ref(`rooms/${router.query.roomId}/questions`).push(question);
+
+            setNewQuestion('');
+            
+        } catch (error) {
+            
+        }
+    }
 
     return (
         <>
@@ -45,6 +119,42 @@ export default function RoomPage(){
                             : questionsState.length + ' Pergunta'}</span>
                         }
                     </div>
+
+                    <form onSubmit={handleSendQuestion}>
+                        <textarea 
+                            name="question" 
+                            placeholder='O que você quer perguntar?'
+                            value={newQuestionState}
+                            onChange={(event) => setNewQuestion(event.target.value)}
+                        />
+
+                        <div className={styles.questionAuthorContainer}>
+                            {authContext.userState ? (
+                                <AvatarAndUserName 
+                                    avatar={authContext.userState!.avatar} 
+                                    name={authContext.userState!.name} 
+                                />
+                            ) : (
+                                <p>
+                                    Para enviar uma pergunta,{' '}
+                                    <button 
+                                        type='button' 
+                                        name='google-login-button'
+                                        onClick={loginWithGoogle}
+                                    >
+                                        faça seu login.
+                                    </button>
+                                </p>
+                            )}
+
+                            <button 
+                                type='submit'
+                                disabled={!authContext.userState}
+                            >
+                                Enviar Pergunta
+                            </button>
+                        </div>
+                    </form>
 
                     {questionsState.length == 0 ? (
                         <div className={styles.noQuestions}>

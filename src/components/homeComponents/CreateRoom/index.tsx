@@ -1,24 +1,39 @@
+import { useState } from 'react';
 import Image from 'next/image';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 import styles from './styles.module.scss';
 
 import { useAuth } from '../../../contexts/authContext';
+import { database } from '../../../services/firebase';
 
 export default function CreateRoom() {
+
+    const [newRoomState, setNewRoom] = useState('');
 
     const router = useRouter();
     const authContext = useAuth();
 
-    if(!authContext.userState) router.replace('/');
+    useEffect( () => {
+        if(!authContext.userState) router.replace('/');
+    }, []);
 
-    function onsubmit(event: FormEvent<HTMLFormElement>){
+    async function handleCreateRoom(event: FormEvent<HTMLFormElement>){
 
         event.preventDefault();
 
-        router.push('/room');
+        if(newRoomState.trim().length == 0) return;
+
+        const roomRef = database.ref('rooms');
+
+        const firebaseRoom = await roomRef.push({
+            title: newRoomState,
+            authorId: authContext.userState?.id
+        });
+
+        router.push(`/room/${firebaseRoom.key}`);
     }
 
     return (
@@ -30,13 +45,15 @@ export default function CreateRoom() {
                 height={69}
             />
 
-            <form onSubmit={onsubmit}>
+            <form onSubmit={handleCreateRoom}>
 
                 <h2>Crie uma nova sala</h2>
 
                 <input 
                     type="text" 
                     placeholder='Nome da sala'
+                    value={newRoomState}
+                    onChange={(event) => setNewRoom(event.target.value)}
                 />
 
                 <button type="submit">

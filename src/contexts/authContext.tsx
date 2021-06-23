@@ -46,9 +46,7 @@ export function AuthProvider({ children }: IProps) {
     }, []);
 
     async function signInWithGoogle() {
-
         try {
-
             if (!userState) {
 
                 const provider = new firebase.auth.GoogleAuthProvider();
