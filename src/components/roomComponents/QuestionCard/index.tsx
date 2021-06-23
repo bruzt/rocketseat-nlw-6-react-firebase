@@ -14,8 +14,8 @@ interface IProps {
 
 export default function QuestionCard({ question }: IProps){
 
-    const [isRespondedState, setIsResponded] = useState(false);
-    const [isRespondingState, setIsResponding] = useState(false);
+    const [isRespondedState, setIsResponded] = useState(question.isAnswered);
+    const [isRespondingState, setIsResponding] = useState(question.isHighlighted);
     const [isDeleteQuestionModalOpenState, setIsDeleteQuestionModalOpen] = useState(false);
 
     function responded(){

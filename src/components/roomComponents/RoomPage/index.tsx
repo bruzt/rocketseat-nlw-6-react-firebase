@@ -8,9 +8,9 @@ import { useAuth } from '../../../contexts/authContext';
 import Header from '../../Header';
 import QuestionCard from '../QuestionCard';
 import AvatarAndUserName from '../AvatarAndUserName';
-import { database } from '../../../services/firebase';
+import { firebase, database } from '../../../services/firebase';
 
-interface IQuestion {
+interface IFirebaseQuestion {
     [key: string]: {
         author: {
             name: string;
@@ -18,7 +18,7 @@ interface IQuestion {
         };
         content: string;
         isAnswered: boolean;
-        isHighLighted: boolean;
+        isHighlighted: boolean;
     }
 }
 
@@ -30,7 +30,7 @@ export interface IQuestionState {
     };
     content: string;
     isAnswered: boolean;
-    isHighLighted: boolean;
+    isHighlighted: boolean;
     
 }
 
@@ -38,6 +38,8 @@ export default function RoomPage(){
 
     const [newQuestionState, setNewQuestion] = useState('');
     const [questionsState, setQuestions] = useState<IQuestionState[]>([]);
+    const [roomTitleState, setRoomTitle] = useState('');
+    const [roomAuthorId, setRoomAuthor] = useState('');
 
     const authContext = useAuth();
     const router = useRouter();
@@ -50,19 +52,21 @@ export default function RoomPage(){
         try {
 
             const roomRef = database.ref(`rooms/${router.query.roomId}`);
-
-            roomRef.once('value', (room) => {
-
+            
+            roomRef.on('value', (room) => {
+                
                 const firebaseRoom = room.val();
-                const firebaseQuestions: IQuestion = firebaseRoom?.questions ?? {};
-
+                const firebaseQuestions: IFirebaseQuestion = firebaseRoom?.questions ?? {};
+                
                 const parsedQuestions = Object.entries(firebaseQuestions).map( ([key, values]) => {
                     return {
                         id: key,
                         ...values
                     }
                 });
-
+                
+                setRoomAuthor(firebaseRoom.authorId)
+                setRoomTitle(firebaseRoom.title);
                 setQuestions(parsedQuestions);
             });
 
@@ -90,7 +94,7 @@ export default function RoomPage(){
                 name: authContext.userState.name,
                 avatar: authContext.userState.avatar,
             },
-            isHighLighted: false,
+            isHighlighted: false,
             isAnswered: false,
         }
 
@@ -101,7 +105,7 @@ export default function RoomPage(){
             setNewQuestion('');
             
         } catch (error) {
-            
+            alert('Erro ao enviar pergunta');
         }
     }
 
@@ -113,48 +117,51 @@ export default function RoomPage(){
                 <main>
 
                     <div className={styles.roomTitle}>
-                        <h2>Sala React Q&A</h2>
-                        {questionsState.length > 0 && <span>{questionsState.length > 1 
-                            ? questionsState.length + ' Perguntas' 
-                            : questionsState.length + ' Pergunta'}</span>
+                        <h2>Sala: {roomTitleState} Q&A</h2>
+                        {questionsState.length > 0 && <span>{questionsState.length == 1 
+                            ? questionsState.length + ' Pergunta' 
+                            : questionsState.length + ' Perguntas'}</span>
                         }
                     </div>
+                    
+                    {authContext.userState?.id != roomAuthorId && (
 
-                    <form onSubmit={handleSendQuestion}>
-                        <textarea 
-                            name="question" 
-                            placeholder='O que você quer perguntar?'
-                            value={newQuestionState}
-                            onChange={(event) => setNewQuestion(event.target.value)}
-                        />
+                        <form onSubmit={handleSendQuestion}>
+                            <textarea 
+                                name="question" 
+                                placeholder='O que você quer perguntar?'
+                                value={newQuestionState}
+                                onChange={(event) => setNewQuestion(event.target.value)}
+                            />
 
-                        <div className={styles.questionAuthorContainer}>
-                            {authContext.userState ? (
-                                <AvatarAndUserName 
-                                    avatar={authContext.userState!.avatar} 
-                                    name={authContext.userState!.name} 
-                                />
-                            ) : (
-                                <p>
-                                    Para enviar uma pergunta,{' '}
-                                    <button 
-                                        type='button' 
-                                        name='google-login-button'
-                                        onClick={loginWithGoogle}
-                                    >
-                                        faça seu login.
-                                    </button>
-                                </p>
-                            )}
+                            <div className={styles.questionAuthorContainer}>
+                                {authContext.userState ? (
+                                    <AvatarAndUserName 
+                                        avatar={authContext.userState!.avatar} 
+                                        name={authContext.userState!.name} 
+                                    />
+                                ) : (
+                                    <p>
+                                        Para enviar uma pergunta,{' '}
+                                        <button 
+                                            type='button' 
+                                            name='google-login-button'
+                                            onClick={loginWithGoogle}
+                                        >
+                                            faça seu login.
+                                        </button>
+                                    </p>
+                                )}
 
-                            <button 
-                                type='submit'
-                                disabled={!authContext.userState}
-                            >
-                                Enviar Pergunta
-                            </button>
-                        </div>
-                    </form>
+                                <button 
+                                    type='submit'
+                                    disabled={!authContext.userState || newQuestionState.trim().length == 0}
+                                >
+                                    Enviar Pergunta
+                                </button>
+                            </div>
+                        </form>
+                    )}
 
                     {questionsState.length == 0 ? (
                         <div className={styles.noQuestions}>
