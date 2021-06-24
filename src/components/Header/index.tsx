@@ -7,7 +7,11 @@ import Link from 'next/link';
 import styles from './styles.module.scss';
 import CloseRoomModal from '../roomComponents/CloseRoomModal';
 
-export default function Header(){
+interface IProps {
+    isAuthor: boolean;
+}
+
+export default function Header({ isAuthor }: IProps){
 
     const [isCloseModalOpenState, setIsCloseModalOpenState] = useState(false);
 
@@ -15,7 +19,11 @@ export default function Header(){
 
     return (
         <>
-            {isCloseModalOpenState && <CloseRoomModal setIsCloseModalOpen={setIsCloseModalOpenState} />}
+            {isCloseModalOpenState && (
+                <CloseRoomModal 
+                    setIsCloseModalOpen={setIsCloseModalOpenState}
+                />
+            )}
         
             <header className={styles.container}>
                 <Link href='/' passHref>
@@ -42,13 +50,15 @@ export default function Header(){
                         Sala {router.query.roomId}
                     </button>
 
-                    <button 
-                        type='button' 
-                        name='close'
-                        onClick={() => setIsCloseModalOpenState(true)}
-                    >
-                        Encerrar sala
-                    </button>
+                    {isAuthor && (
+                        <button 
+                            type='button' 
+                            name='close'
+                            onClick={() => setIsCloseModalOpenState(true)}
+                        >
+                            Encerrar sala
+                        </button>
+                    )}
                 </div>
             </header>
         </>

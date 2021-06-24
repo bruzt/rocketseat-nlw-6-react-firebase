@@ -67,5 +67,10 @@
         color: var(--purple1);
 
         margin-left: 0.5625rem;
+
+        &:hover {
+            filter: brightness(0.9);
+            background-color: rgba(1,1,1,0.04);
+        }
     }
 }

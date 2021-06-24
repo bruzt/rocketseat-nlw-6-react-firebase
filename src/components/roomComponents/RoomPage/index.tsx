@@ -19,6 +19,11 @@ interface IFirebaseQuestion {
         content: string;
         isAnswered: boolean;
         isHighlighted: boolean;
+        likes?: {
+            [key: string]: {
+                authorId: string;
+            };
+        };
     }
 }
 
@@ -31,7 +36,8 @@ export interface IQuestionState {
     content: string;
     isAnswered: boolean;
     isHighlighted: boolean;
-    
+    likesCount: number;
+    myLikeId: string | undefined;
 }
 
 export default function RoomPage(){
@@ -44,18 +50,29 @@ export default function RoomPage(){
     const authContext = useAuth();
     const router = useRouter();
 
-    const isAuthor = authContext.userState?.id == roomAuthorId;
+    const isAuthor = authContext.user?.id == roomAuthorId;
 
     useEffect(() => {
-        fetchQuestions();
-    }, [router.query.roomId]);
+        const roomRef = fetchQuestions();
 
-    async function fetchQuestions(){
+        () => roomRef?.off('value');
+
+    }, [router.query.roomId, authContext.user?.id]);
+
+    function fetchQuestions(){
         try {
 
             const roomRef = database.ref(`rooms/${router.query.roomId}`);
             
             roomRef.on('value', (room) => {
+
+                if(room.exists() == false){
+
+                    roomRef.off('value');
+                    alert('Sala encerrada');
+                    //router.push('/');
+                    return;
+                }
                 
                 const firebaseRoom = room.val();
                 const firebaseQuestions: IFirebaseQuestion = firebaseRoom?.questions ?? {};
@@ -63,7 +80,10 @@ export default function RoomPage(){
                 const parsedQuestions = Object.entries(firebaseQuestions).map( ([key, values]) => {
                     return {
                         id: key,
-                        ...values
+                        ...values,
+                        likesCount: Object.values(values.likes ?? {}).length,
+                        myLikeId: Object.entries(values.likes ?? {}).find( ([key, like]) => like.authorId == authContext.user?.id)?.[0],
+                        likes: undefined,
                     }
                 });
                 
@@ -71,6 +91,8 @@ export default function RoomPage(){
                 setRoomTitle(firebaseRoom.title);
                 setQuestions(parsedQuestions);
             });
+
+            return roomRef;
 
         } catch (error) {
             alert('Erro ao buscar perguntas')
@@ -88,13 +110,13 @@ export default function RoomPage(){
 
         if(newQuestionState.trim().length == 0) return;
 
-        if(authContext.userState == null) return;
+        if(authContext.user == null) return;
 
         const question = {
             content: newQuestionState,
             author: {
-                name: authContext.userState.name,
-                avatar: authContext.userState.avatar,
+                name: authContext.user.name,
+                avatar: authContext.user.avatar,
             },
             isHighlighted: false,
             isAnswered: false,
@@ -113,7 +135,7 @@ export default function RoomPage(){
 
     return (
         <>
-            <Header />
+            <Header isAuthor={isAuthor} />
 
             <div className={styles.container}>
                 <main>
@@ -137,10 +159,10 @@ export default function RoomPage(){
                             />
 
                             <div className={styles.questionAuthorContainer}>
-                                {authContext.userState ? (
+                                {authContext.user ? (
                                     <AvatarAndUserName 
-                                        avatar={authContext.userState!.avatar} 
-                                        name={authContext.userState!.name} 
+                                        avatar={authContext.user!.avatar} 
+                                        name={authContext.user!.name} 
                                     />
                                 ) : (
                                     <p>
@@ -157,7 +179,7 @@ export default function RoomPage(){
 
                                 <button 
                                     type='submit'
-                                    disabled={!authContext.userState || newQuestionState.trim().length == 0}
+                                    disabled={!authContext.user || newQuestionState.trim().length == 0}
                                 >
                                     Enviar Pergunta
                                 </button>

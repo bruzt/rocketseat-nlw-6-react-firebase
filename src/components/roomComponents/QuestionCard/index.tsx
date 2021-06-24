@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { BiCheckCircle, BiLike } from 'react-icons/bi';
 import { GoComment } from 'react-icons/go';
 import { FiTrash } from 'react-icons/fi';
+import { useRouter } from 'next/router';
 
 import styles from './styles.module.scss';
 import { IQuestionState } from '../RoomPage';
 import DeleteQuestionModal from '../DeleteQuestionModal';
 import AvatarAndUserName from '../AvatarAndUserName';
+import { database } from '../../../services/firebase';
+import { useAuth } from '../../../contexts/authContext';
 
 interface IProps {
     question: IQuestionState;
@@ -15,26 +18,50 @@ interface IProps {
 
 export default function QuestionCard({ question, isAuthor }: IProps){
 
-    const [isRespondedState, setIsResponded] = useState(question.isAnswered);
-    const [isRespondingState, setIsResponding] = useState(question.isHighlighted);
     const [isDeleteQuestionModalOpenState, setIsDeleteQuestionModalOpen] = useState(false);
-    const [isLikedState, setIsLiked] = useState(false);
 
-    function responded(){
+    const router = useRouter();
+    const authContext = useAuth();
 
-        setIsResponded(!isRespondedState);
+    async function handleLikeQuestion(){
+        
+        if(question.myLikeId){
+            
+            await database.ref(`rooms/${router.query.roomId}/questions/${question.id}/likes/${question.myLikeId}`).remove();
+
+        } else {
+
+            await database.ref(`rooms/${router.query.roomId}/questions/${question.id}/likes`).push({
+                authorId: authContext.user?.id,
+            });
+        }
     }
 
-    function responding(){
+    async function responded(){
 
-        setIsResponding(!isRespondingState);
+        await database.ref(`rooms/${router.query.roomId}/questions/${question.id}`).update({
+            isAnswered: !question.isAnswered
+        });
+    }
+
+    async function responding(){
+
+        await database.ref(`rooms/${router.query.roomId}/questions/${question.id}`).update({
+            isHighlighted: !question.isHighlighted
+        });
     }
     
     return (
         <>
-            {isDeleteQuestionModalOpenState && <DeleteQuestionModal setIsDeleteModalOpen={setIsDeleteQuestionModalOpen} />}
+            {isDeleteQuestionModalOpenState && (
+                <DeleteQuestionModal 
+                    setIsDeleteModalOpen={setIsDeleteQuestionModalOpen} 
+                    roomId={router.query.roomId}
+                    questionId={question.id}
+                />
+            )}
             
-            <div className={styles.questionCard}>
+            <div className={`${styles.questionCard} ${question.isHighlighted && styles.isHighlighted}`}>
                 <p>
                     {question.content}
                 </p>
@@ -48,14 +75,14 @@ export default function QuestionCard({ question, isAuthor }: IProps){
                                 type='button'
                                 onClick={responded}
                             >
-                                <BiCheckCircle size={24} color={isRespondedState ? '#835AFD' : '#737380'} />
+                                <BiCheckCircle size={24} color={question.isAnswered ? '#835AFD' : '#737380'} />
                             </button>
 
                             <button 
                                 type='button'
                                 onClick={responding}
                             >
-                                <GoComment size={24} color={isRespondingState ? '#835AFD' : '#737380'} />
+                                <GoComment size={24} color={question.isHighlighted ? '#835AFD' : '#737380'} />
                             </button>
 
                             <button 
@@ -67,14 +94,14 @@ export default function QuestionCard({ question, isAuthor }: IProps){
                         </div>
                     ) : (
                         <div>
-                            <span>1</span>
-
+                            {question.likesCount > 0 && <span>{question.likesCount}</span>}
+                            
                             <button 
                                 type='button'
                                 name='like-button'
-                                onClick={() => setIsLiked(!isLikedState)}
+                                onClick={handleLikeQuestion/*() => setIsLiked(!isLikedState)*/}
                             >
-                                <BiLike size={24} color={isLikedState ? '#835AFD' : '#737380'} />
+                                <BiLike size={24} color={question.myLikeId ? '#835AFD' : '#737380'} />
                             </button>
                         </div>
                     )}

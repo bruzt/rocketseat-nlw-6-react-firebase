@@ -1,5 +1,8 @@
 import React from 'react';
 import { TiDeleteOutline } from 'react-icons/ti';
+import { useRouter } from 'next/router';
+
+import { database } from '../../../services/firebase';
 
 import styles from './styles.module.scss';
 
@@ -8,6 +11,15 @@ interface IProps {
 }
 
 export default function CloseRoomModal({ setIsCloseModalOpen }: IProps) {
+
+    const router = useRouter();
+
+    function closeRoom() {
+        
+        database.ref(`rooms/${router.query.roomId}`).remove();
+
+        router.push('/');
+    }
 
     return (
         <div className={styles.container}>
@@ -30,6 +42,7 @@ export default function CloseRoomModal({ setIsCloseModalOpen }: IProps) {
 
                     <button 
                         type='button'
+                        onClick={closeRoom}
                     >
                         Sim, encerrar
                     </button>

@@ -17,7 +17,7 @@ export default function CreateRoom() {
     const authContext = useAuth();
 
     useEffect( () => {
-        if(!authContext.userState) router.replace('/');
+        if(!authContext.user) router.replace('/');
     }, []);
 
     async function handleCreateRoom(event: FormEvent<HTMLFormElement>){
@@ -30,7 +30,7 @@ export default function CreateRoom() {
 
         const firebaseRoom = await roomRef.push({
             title: newRoomState,
-            authorId: authContext.userState?.id
+            authorId: authContext.user?.id
         });
 
         router.push(`/room/${firebaseRoom.key}`);

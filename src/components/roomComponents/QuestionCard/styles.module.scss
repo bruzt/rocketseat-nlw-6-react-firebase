@@ -1,11 +1,12 @@
 
 .questionCard {
-    height: 9.5rem;
+    max-height: 9.5rem;
 
     background-color: var(--white);
     border-radius: 0.5rem;
+    box-shadow: 0.1px 0.3rem rgba(1,1,1,0.04);
     
-    padding: 1rem;
+    padding: 1.5rem;
 
     display: flex;
     flex-direction: column;
@@ -14,6 +15,8 @@
     p {
         color: var(--black1);
         line-height: 1.5rem;
+
+        padding-bottom: 1rem;
     }
     
     footer {
@@ -25,6 +28,10 @@
         font-size: 0;
         border: 0;
         background-color: transparent;
+
+        &:hover {
+            filter: brightness(0.9);
+        }
     }
 
     footer button:nth-child(2),
@@ -42,4 +49,9 @@
         font: 400 1rem 'Poppins';
         color: var(--gray3)
     }
+}
+
+.isHighlighted {
+    border: 1px solid var(--purple1);
+    background-color: rgba(131, 90, 253, 0.1);
 }

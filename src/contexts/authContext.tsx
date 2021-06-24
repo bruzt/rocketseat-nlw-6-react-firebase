@@ -14,7 +14,7 @@ interface IUserState {
 
 interface IAuthContext {
     signInWithGoogle: () => Promise<boolean>;
-    userState: IUserState | undefined;
+    user: IUserState | undefined;
 }
 
 const Context = createContext({} as IAuthContext);
@@ -79,7 +79,7 @@ export function AuthProvider({ children }: IProps) {
         <Context.Provider
             value={{
                 signInWithGoogle,
-                userState,
+                user: userState,
             }}
         >
             {children}
