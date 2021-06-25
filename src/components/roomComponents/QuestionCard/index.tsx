@@ -56,12 +56,18 @@ export default function QuestionCard({ question, isAuthor }: IProps){
             {isDeleteQuestionModalOpenState && (
                 <DeleteQuestionModal 
                     setIsDeleteModalOpen={setIsDeleteQuestionModalOpen} 
-                    roomId={router.query.roomId}
+                    roomId={router.query.roomId as string}
                     questionId={question.id}
                 />
             )}
             
-            <div className={`${styles.questionCard} ${question.isHighlighted && styles.isHighlighted}`}>
+            <div 
+                className={`
+                    ${styles.questionCard} 
+                    ${question.isHighlighted && styles.isHighlighted}
+                    ${(question.isAnswered) && styles.wasAnswered}
+                `}
+            >
                 <p>
                     {question.content}
                 </p>
@@ -74,6 +80,7 @@ export default function QuestionCard({ question, isAuthor }: IProps){
                             <button 
                                 type='button'
                                 onClick={responded}
+                                title='Respondida'
                             >
                                 <BiCheckCircle size={24} color={question.isAnswered ? '#835AFD' : '#737380'} />
                             </button>
@@ -81,6 +88,7 @@ export default function QuestionCard({ question, isAuthor }: IProps){
                             <button 
                                 type='button'
                                 onClick={responding}
+                                title='Respondendo'
                             >
                                 <GoComment size={24} color={question.isHighlighted ? '#835AFD' : '#737380'} />
                             </button>
@@ -88,21 +96,26 @@ export default function QuestionCard({ question, isAuthor }: IProps){
                             <button 
                                 type='button'
                                 onClick={() => setIsDeleteQuestionModalOpen(true)}
+                                title='Excluir'
                             >
                                 <FiTrash size={24} color={'#737380'} />
                             </button>
                         </div>
                     ) : (
                         <div>
-                            {question.likesCount > 0 && <span>{question.likesCount}</span>}
-                            
-                            <button 
-                                type='button'
-                                name='like-button'
-                                onClick={handleLikeQuestion/*() => setIsLiked(!isLikedState)*/}
-                            >
-                                <BiLike size={24} color={question.myLikeId ? '#835AFD' : '#737380'} />
-                            </button>
+                            {(!question.isAnswered && !question.isHighlighted) && (
+                                <>
+                                    {question.likesCount > 0 && <span>{question.likesCount}</span>}
+                                    
+                                    <button 
+                                        type='button'
+                                        name='like-button'
+                                        onClick={handleLikeQuestion/*() => setIsLiked(!isLikedState)*/}
+                                    >
+                                        <BiLike size={24} color={question.myLikeId ? '#835AFD' : '#737380'} />
+                                    </button>
+                                </>
+                            )}
                         </div>
                     )}
                     

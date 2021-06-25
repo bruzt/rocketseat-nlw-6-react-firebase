@@ -10,6 +10,16 @@ import QuestionCard from '../QuestionCard';
 import AvatarAndUserName from '../AvatarAndUserName';
 import { firebase, database } from '../../../services/firebase';
 
+declare global {
+    interface Array<T>  {
+        move: (from: number, to: number) => void;
+    }
+}
+
+Array.prototype.move = function(from, to) {
+    this.splice(to, 0, this.splice(from, 1)[0]);
+};
+
 interface IFirebaseQuestion {
     [key: string]: {
         author: {
@@ -86,6 +96,15 @@ export default function RoomPage(){
                         likes: undefined,
                     }
                 });
+
+                /*if(parsedQuestions.length > 1){
+                    for(let i=0; i < parsedQuestions.length; i++){
+    
+                        if(parsedQuestions[i].isAnswered && parsedQuestions[i].isHighlighted){
+                            parsedQuestions.move(i, parsedQuestions.length-1)
+                        }
+                    }
+                }*/
                 
                 setRoomAuthor(firebaseRoom.authorId)
                 setRoomTitle(firebaseRoom.title);
